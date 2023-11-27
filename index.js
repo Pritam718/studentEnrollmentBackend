@@ -60,8 +60,6 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
       httpOnly: false,
-      sameSite: "none",
-      secure: true,
     },
     store: store,
     resave: false,
@@ -71,7 +69,10 @@ app.use(
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://student-enrolment.netlify.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://student-enrolment-frontend.onrender.com",
+    ],
     credentials: true,
     methods: "GET,POST,PUT,DELETE",
   })
