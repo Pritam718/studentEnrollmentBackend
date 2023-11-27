@@ -54,20 +54,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(ApiResponse);
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
-  );
-  if ("OPTIONS" == req.method) {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header("Access-Control-Allow-Origin", req.headers.origin);
+//   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+//   );
+//   if ("OPTIONS" == req.method) {
+//     res.sendStatus(200);
+//   } else {
+//     next();
+//   }
+// });
 
 app.use(
   session({
@@ -84,16 +84,18 @@ app.use(
   })
 );
 
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:3000",
-//       "https://student-enrolment-frontend.onrender.com",
-//     ],
-//     credentials: true,
-//     methods: "GET,POST,PUT,DELETE",
-//   })
-// );
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:8000",
+      "https://student-enrolment-frontend.onrender.com",
+      "https://student-enrolment-backend.onrender.com",
+    ],
+    credentials: true,
+    methods: "GET,POST,PUT,DELETE",
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
