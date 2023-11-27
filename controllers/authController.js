@@ -14,8 +14,8 @@ const register = async (req, res) => {
     const user = await User.findOne({ email: email });
     if (!!user)
       return res.apiResponse(true, "user alrady exist with this email");
-    await User.create({ email: email, password: password });
-    res.apiResponse(true, "user registered successfully", req.user);
+    const newUser = await User.create({ email: email, password: password });
+    res.apiResponse(true, "user registered successfully", newUser);
   } catch (err) {
     res.apiResponse(false, err.message);
   }
