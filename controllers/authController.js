@@ -11,8 +11,8 @@ const login = (req, res) => {
 const register = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const newUser = new User({ email, password });
-    const user = await User.findOne({ email });
+    const newUser = new User({ email: email, password: password });
+    const user = await User.findOne({ email: email });
     if (!!user)
       return res.apiResponse(true, "user alrady exist with this email");
     newUser.save();
