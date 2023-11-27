@@ -73,6 +73,7 @@ app.use(
   cors({
     origin: ["http://localhost:3000", "https://student-enrolment.netlify.app"],
     credentials: true,
+    allowedHeaders: true,
     methods: "GET,POST,PUT,DELETE",
   })
 );
