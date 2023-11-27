@@ -11,11 +11,10 @@ const login = (req, res) => {
 const register = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const newUser = new User({ email: email, password: password });
     const user = await User.findOne({ email: email });
     if (!!user)
       return res.apiResponse(true, "user alrady exist with this email");
-    newUser.save();
+    await User.create({ email: email, password: password });
     res.apiResponse(true, "user registered successfully", req.user);
   } catch (err) {
     res.apiResponse(false, err.message);
