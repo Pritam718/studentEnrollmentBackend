@@ -2,8 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const router = require("./routes");
 const mongoose = require("mongoose");
-const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
+// const session = require("express-session");
+// const MongoDBStore = require("connect-mongodb-session")(session);
 const ApiResponse = require("./middleware/ApiResponse");
 const passport = require("passport");
 const passportConfig = require("./auth/passportConfig");
@@ -42,14 +42,14 @@ mongoose
     confirm.log("db error => ", err.message);
   });
 
-const store = new MongoDBStore({
-  uri: process.env.MONGO_URI,
-  collection: "mySessions",
-});
+// const store = new MongoDBStore({
+//   uri: process.env.MONGO_URI,
+//   collection: "mySessions",
+// });
 
-store.on("error", function (error) {
-  console.log(error);
-});
+// store.on("error", function (error) {
+//   console.log(error);
+// });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -75,6 +75,9 @@ app.use(
     name: "session",
     keys: [process.env.SESSION_SECRET],
     maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    httpOnly: false,
+    secure: true,
+    sameSite: "none",
   })
 );
 
