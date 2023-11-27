@@ -9,6 +9,7 @@ const passport = require("passport");
 const passportConfig = require("./auth/passportConfig");
 const http = require("http");
 const { Server } = require("socket.io");
+const cookieSession = require("cookie-session");
 require("dotenv").config();
 
 const app = express();
@@ -54,18 +55,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(ApiResponse);
 
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET,
+//     cookie: {
+//       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+//       httpOnly: false,
+//       sameSite: "none",
+//       secure: true,
+//     },
+//     store: store,
+//     resave: false,
+//     saveUninitialized: false,
+//   })
+// );
+
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-      httpOnly: false,
-      sameSite: "none",
-      secure: true,
-    },
-    store: store,
-    resave: false,
-    saveUninitialized: false,
+  cookieSession({
+    name: "session",
+    keys: [process.env.SESSION_SECRET],
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
   })
 );
 
