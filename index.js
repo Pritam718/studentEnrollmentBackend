@@ -2,14 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const router = require("./routes");
 const mongoose = require("mongoose");
-// const session = require("express-session");
-// const MongoDBStore = require("connect-mongodb-session")(session);
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 const ApiResponse = require("./middleware/ApiResponse");
 const passport = require("passport");
 const passportConfig = require("./auth/passportConfig");
 const http = require("http");
 const { Server } = require("socket.io");
 const cookieSession = require("cookie-session");
+const { shouldSendSameSiteNone } = require("should-send-same-site-none");
 require("dotenv").config();
 
 const app = express();
@@ -42,42 +43,33 @@ mongoose
     confirm.log("db error => ", err.message);
   });
 
-// const store = new MongoDBStore({
-//   uri: process.env.MONGO_URI,
-//   collection: "mySessions",
-// });
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URI,
+  collection: "mySessions",
+});
 
-// store.on("error", function (error) {
-//   console.log(error);
-// });
+store.on("error", function (error) {
+  console.log(error);
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(ApiResponse);
 
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     cookie: {
-//       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-//       httpOnly: false,
-//       sameSite: "none",
-//       secure: true,
-//     },
-//     store: store,
-//     resave: false,
-//     saveUninitialized: false,
-//   })
-// );
+app.use(shouldSendSameSiteNone);
 
 app.use(
-  cookieSession({
-    name: "session",
-    keys: [process.env.SESSION_SECRET],
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-    httpOnly: false,
-    secure: true,
-    sameSite: "none",
+  session({
+    secret: process.env.SESSION_SECRET,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      httpOnly: false,
+      sameSite: "none",
+      secure: true,
+    },
+    store: store,
+    resave: false,
+    saveUninitialized: false,
   })
 );
 
