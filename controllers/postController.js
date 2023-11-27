@@ -15,6 +15,8 @@ const createPost = async (req, res) => {
       html: req?.body?.html,
     });
     const postData = await post.save();
+    const io = global.io;
+    io.emit("newRecord", postData);
     res
       .status(200)
       .send({ success: true, msg: "Data Submit Successfully", data: postData });
@@ -26,7 +28,6 @@ const createPost = async (req, res) => {
 const getPost = async (req, res) => {
   try {
     const posts = await Post.find();
-    console.log(posts);
     res.apiResponse(true, "posts successfully fetched", posts);
   } catch (error) {
     res.status(400).send({ success: false, msg: error.message });

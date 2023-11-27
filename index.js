@@ -7,15 +7,33 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const ApiResponse = require("./middleware/ApiResponse");
 const passport = require("passport");
 const passportConfig = require("./auth/passportConfig");
+const http = require("http");
+const { Server } = require("socket.io");
 require("dotenv").config();
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+global.io = io;
+
+io.on("connection", (socket) => {
+  console.log("A user connected", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
+});
 
 const PORT = process.env.PORT || 8000;
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(PORT, function () {
+    server.listen(PORT, function () {
       console.log(`server is running on port ${PORT}`);
     });
   })
@@ -51,9 +69,9 @@ app.use(
 
 app.use(
   cors({
-    origin: ["http://localhost:8000"],
+    origin: "http://localhost:3000",
     credentials: true,
-    allowedHeaders: "*",
+    methods: "GET,POST,PUT,DELETE",
   })
 );
 
