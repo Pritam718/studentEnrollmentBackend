@@ -87,9 +87,7 @@ app.use(
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
       "http://localhost:8000",
-      "https://student-enrolment-frontend.onrender.com",
       "https://student-enrolment-backend.onrender.com",
     ],
     credentials: true,
