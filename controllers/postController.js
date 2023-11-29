@@ -17,11 +17,10 @@ const createPost = async (req, res) => {
     const postData = await post.save();
     const io = global.io;
     io.emit("newRecord", postData);
-    res
-      .status(200)
-      .send({ success: true, msg: "Data Submit Successfully", data: postData });
+    
+      res.apiResponse(true, "Data Submit Successfully", postData);
   } catch (error) {
-    res.status(400).send({ success: false, msg: error.message });
+    res.apiResponse(false, error.message);
   }
 };
 
@@ -30,27 +29,26 @@ const getPost = async (req, res) => {
     const posts = await Post.find();
     res.apiResponse(true, "posts successfully fetched", posts);
   } catch (error) {
-    res.status(400).send({ success: false, msg: error.message });
+    res.apiResponse(false, error.message);
   }
 };
 const deletePost = async (req, res) => {
   try {
     const id = req.params.id;
     await Post.deleteOne({ _id: id });
-    res.status(200).send({ success: true, msg: "Post delete successfully" });
+    res.apiResponse(true, "Post delete successfully");
   } catch (error) {
-    res.status(400).send({ success: false, msg: error.message });
+    res.apiResponse(false, error.message);
   }
 };
 const updatePost = async (req, res) => {
-  console.log(req.body);
   try {
     const id = req.params.id;
     const payload = req.body;
-    await Post.findByIdAndUpdate(id, payload);
-    res.status(200).send({ success: true, msg: "Post updated" });
+    await Post.findByIdAndUpdate(id, {...payload,firstName:payload?.fname,lastName:payload?.lname});
+    res.apiResponse(true, "Post updated" );
   } catch (error) {
-    res.status(400).send({ success: false, msg: error.message });
+    res.apiResponse(false, error.message);
   }
 };
 module.exports = {
