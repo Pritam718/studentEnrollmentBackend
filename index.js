@@ -30,6 +30,7 @@ io.on("connection", (socket) => {
 });
 
 const PORT = process.env.PORT || 8000;
+console.log(process.env.MONGO_URI)
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -71,7 +72,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:8000",
-      "https://student-enrolment-backend.onrender.com",
+      "https://studentenrollmentbackend.onrender.com",
     ],
     credentials: true,
     methods: "GET,POST,PUT,DELETE",
