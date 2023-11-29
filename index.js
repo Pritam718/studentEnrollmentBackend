@@ -38,7 +38,7 @@ mongoose
     });
   })
   .catch((err) => {
-    confirm.log("db error => ", err.message);
+    console.log("db error => ", err.message);
   });
 
 const store = new MongoDBStore({
